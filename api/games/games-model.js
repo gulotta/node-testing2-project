@@ -1,34 +1,21 @@
 const db = require('../../data/db-config')
 
 
-function getAll(){
-    return db('games')
+async function createGame(game){
+    const [id] = await db("games").insert(game)
+    return db("games").where("game_id", id).first()
 }
-function getById(id){
-    return db('games').where('id', id).first()
-}
-async function insert(game){
-    return await db('games').insert(game).then(([id]) => {
-        return db('games').where('id', id).first()
-    })
 
+async function deleteGame(id){
+    const game = await db('games').where("game_id", id).first()
+    await db('games').where("game_id", id).delete()
+    return game
 }
-async function update(id, changes){
-    await db('games').where({id}).update(changes)
-    return db('games').where({id}).first()
 
-}
-function remove(id){
-    return db('games').where({id}).delete()
-
-}
 
 
 
 module.exports = {
-    insert,
-    update,
-    remove,
-    getAll,
-    getById,
+   createGame,
+   deleteGame
 }

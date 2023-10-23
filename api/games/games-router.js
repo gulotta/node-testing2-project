@@ -3,19 +3,12 @@ const router = express.Router()
 const Game = require('./games-model')
 
 
-router.get('/', async (req, res, next) => {
-   try {
-    const games = await Game.getAll()
-    res.json(games)
-} catch (err) {
-    next(err)
-}
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id
+    const deleteGame = await Game.deleteGame(id)
+    res.status(200).json(deleteGame)
 })
 
-router.use((err, req, res, next) => { //eslint-disable-line
-res.status(err.status || 500).json({
-    message: err.message,
-})
-})
+
 
 module.exports = router
